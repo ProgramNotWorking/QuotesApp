@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="Theme.QuoteApp" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+</resources>
