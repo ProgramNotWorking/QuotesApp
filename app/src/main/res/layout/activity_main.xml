@@ -8,6 +8,29 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/searchButton"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:src="@drawable/search_icon"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/quoteHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,6 +89,19 @@
                 android:paddingEnd="50dp"
                 android:gravity="end"
                 android:text="@string/stub" />
+
+            <ImageView
+                android:id="@+id/addToFavoriteButton"
+                android:layout_width="70sp"
+                android:layout_height="70sp"
+                android:padding="5sp"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="26dp"
+                android:layout_gravity="end"
+                android:clickable="true"
+                android:src="@drawable/unfilled_heart_icon"
+                android:focusable="true" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -76,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/get_random_quote"
         android:background="@drawable/rounded_button"
         android:textStyle="bold"

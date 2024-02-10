@@ -40,6 +40,12 @@ class QuoteViewModel : ViewModel() {
         quoteInfo.quoteAuthor = quoteAuthor
     }
 
+    fun getFavoriteState(): Boolean = quoteInfo.isFavorite
+
+    fun setFavoriteState(flag: Boolean) {
+        quoteInfo.isFavorite = flag
+    }
+
     fun getQuote(apiClient: FormismaticApiClient) {
         if (isRequestInProcess) {
             return
