@@ -1,9 +1,29 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.QuoteApp" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="AppTheme.Light" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorAccent">#FF0000</item>
+        <item name="android:windowBackground">#F5F5F5</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:textColorSecondary">#757575</item>
+
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="Theme.AppCompat">
+        <item name="colorPrimary">#424242</item>
+        <item name="colorAccent">#616161</item>
+        <item name="android:windowBackground">#303030</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#BDBDBD</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">true</item>
     </style>
 
 </resources>

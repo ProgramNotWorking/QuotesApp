@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QuotesApp</string>
+    <string name="get_random_quote">Получить рандомную цитату</string>
+    <string name="internet_connection_problems">Проблемы соединения с интернетом</string>
+    <string name="unknown_author">Неизвестный автор</string>
+</resources>

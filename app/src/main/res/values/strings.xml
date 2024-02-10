@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">QuotesApp</string>
+    <string name="get_random_quote">Get random quote</string>
+    <string name="internet_connection_problems">Internet connection problems</string>
+    <string name="stub" translatable="false">STUB</string>
+    <string name="lower_apostrophe" translatable="false">»</string>
+    <string name="upper_apostrophe" translatable="false">«</string>
+    <string name="unknown_author">Unknown author</string>
 </resources>

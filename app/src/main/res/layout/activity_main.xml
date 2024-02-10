@@ -7,6 +7,69 @@
     android:id="@+id/mainHolder"
     tools:context=".MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/quoteHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/getQuoteButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/upperApostrophe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp"
+                android:text="@string/upper_apostrophe" />
+
+            <TextView
+                android:id="@+id/quoteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stub"
+                android:textSize="24sp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lowerApostrophe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:paddingStart="0dp"
+                android:paddingEnd="20dp"
+                android:text="@string/lower_apostrophe" />
+
+            <TextView
+                android:id="@+id/quoteAuthorTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:paddingStart="0dp"
+                android:paddingEnd="50dp"
+                android:gravity="end"
+                android:text="@string/stub" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <Button
         android:id="@+id/getQuoteButton"
         android:layout_width="0dp"
@@ -14,22 +77,12 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="60dp"
-        android:text="Get Quote"
+        android:text="@string/get_random_quote"
+        android:background="@drawable/rounded_button"
         android:textStyle="bold"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/quoteTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Empty"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/getQuoteButton"
-        app:layout_constraintEnd_toEndOf="@+id/getQuoteButton"
-        app:layout_constraintStart_toStartOf="@+id/getQuoteButton"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
