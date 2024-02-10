@@ -5,6 +5,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import java.util.Locale
 
 class FormismaticApiClient(private val context: Context) {
 
@@ -16,7 +17,7 @@ class FormismaticApiClient(private val context: Context) {
     private val baseUrl = "http://api.forismatic.com/api/1.0/"
     private val key = "1"
     private val format = "json"
-    private val lang = "ru"
+    private val lang = if (Locale.getDefault().language == "ru") "ru" else "en"
 
     private val requestQueue: RequestQueue by lazy {
         Volley.newRequestQueue(context.applicationContext)
