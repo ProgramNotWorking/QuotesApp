@@ -19,6 +19,7 @@ class QuoteViewModel : ViewModel() {
     )
     val quoteTextLiveData: MutableLiveData<String> = MutableLiveData()
     val quoteAuthorLiveData: MutableLiveData<String> = MutableLiveData()
+    private var favFlag: Boolean = false
     private var isRestoring: Boolean = false
     private var isRequestInProcess: Boolean = false
 
@@ -40,10 +41,10 @@ class QuoteViewModel : ViewModel() {
         quoteInfo.quoteAuthor = quoteAuthor
     }
 
-    fun getFavoriteState(): Boolean = quoteInfo.isFavorite
+    fun getFavoriteState(): Boolean = favFlag
 
     fun setFavoriteState(flag: Boolean) {
-        quoteInfo.isFavorite = flag
+        favFlag = flag
     }
 
     fun getQuote(apiClient: FormismaticApiClient) {

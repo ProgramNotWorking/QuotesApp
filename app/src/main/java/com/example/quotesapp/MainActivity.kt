@@ -2,6 +2,7 @@ package com.example.quotesapp
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.os.PersistableBundle
 import androidx.lifecycle.ViewModelProvider
 import com.example.quotesapp.api_interaction.FormismaticApiClient
 import com.example.quotesapp.databinding.ActivityMainBinding
+import com.example.quotesapp.dataclasses.QuoteInfo
+import com.example.quotesapp.db.DatabaseHelper
 import com.example.quotesapp.viewmodels.QuoteViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var quoteViewModel: QuoteViewModel
     private lateinit var apiClient: FormismaticApiClient
+    private val database = DatabaseHelper(this)
 
     @SuppressLint("SetTextI18n", "ShowToast", "UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         apiClient = FormismaticApiClient(this@MainActivity)
         quoteViewModel = ViewModelProvider(this)[QuoteViewModel::class.java]
+
+
 
         renderElementsOnStartup()
 
@@ -56,21 +62,45 @@ class MainActivity : AppCompatActivity() {
 
                 // replace this with fr "add to fav" operation
 
-                addToFavoriteButton.setImageResource(
-                    if (addToFavoriteButton.drawable.constantState ==
-                        resources.getDrawable(R.drawable.unfilled_heart_icon).constantState
+                addQuoteToFavorite(
+                    {
+                        database.addQuote(
+                            QuoteInfo(
+                                quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
+                            )
                         )
-                        R.drawable.filled_heart_icon
-                    else
-                        R.drawable.unfilled_heart_icon
+
+                        addToFavoriteButton.setImageResource(R.drawable.filled_heart_icon)
+                        quoteViewModel.setFavoriteState(true)
+
+                        database.close()
+                    }, {
+                        database.deleteQuote(
+                            QuoteInfo(
+                                quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
+                            )
+                        )
+
+                        addToFavoriteButton.setImageResource(R.drawable.unfilled_heart_icon)
+                        quoteViewModel.setFavoriteState(false)
+
+                        database.close()
+                    }, {
+                        quoteViewModel.setFavoriteState(
+                            addToFavoriteButton.drawable.constantState ==
+                                    resources.getDrawable(R.drawable.filled_heart_icon).constantState
+                        )
+
+                        addToFavoriteButton.invalidate()
+                    }
                 )
 
-                quoteViewModel.setFavoriteState(
-                    addToFavoriteButton.drawable.constantState ==
-                        resources.getDrawable(R.drawable.filled_heart_icon).constantState
-                )
+            }
 
-                addToFavoriteButton.invalidate()
+            menuButton.setOnClickListener {
+
+                val intent = Intent(this@MainActivity, QuotesActivity::class.java)
+                startActivity(intent)
 
             }
 
@@ -99,6 +129,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun addQuoteToFavorite(
+        onFollow: () -> Unit,
+        onUnfollow: () -> Unit,
+        finalAction: () -> Unit
+    ) = with(binding) {
+        if (addToFavoriteButton.drawable.constantState ==
+            resources.getDrawable(R.drawable.unfilled_heart_icon).constantState
+        ) {
+            onFollow()
+        } else {
+            onUnfollow()
+        }
+        finalAction()
+    }
+
     private fun fetchDataAndSetText() = with(binding) {
         if (isNetworkAvailable()) {
             quoteViewModel.getQuote(apiClient)
@@ -110,6 +156,11 @@ class MainActivity : AppCompatActivity() {
                 quoteAuthorTextView.text = author
                 quoteViewModel.setQuoteAuthor(author)
             }
+            quoteViewModel.setFavoriteState(
+                database.isQuoteExists(
+                        QuoteInfo(quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor())
+                    )
+            ) // Check something with that
             addToFavoriteButton.setImageResource(
                 if (quoteViewModel.getFavoriteState())
                     R.drawable.filled_heart_icon

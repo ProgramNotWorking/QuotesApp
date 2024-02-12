@@ -14,7 +14,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "quotes.db"
-        private const val TABLE_QUOTES = "quotes_table"
+        const val TABLE_QUOTES = "quotes_table"
         private const val COLUMN_ID = "id"
         private const val COLUMN_QUOTE_TEXT = "column_quote_text"
         private const val COLUMN_QUOTE_AUTHOR = "column_quote_author"
@@ -37,7 +37,6 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(
         val values = ContentValues()
         values.put(COLUMN_QUOTE_TEXT, quote.quoteText)
         values.put(COLUMN_QUOTE_AUTHOR, quote.quoteAuthor)
-        values.put(COLUMN_IS_FAVORITE, if (quote.isFavorite) 1 else 0)
         db.insert(TABLE_QUOTES, null, values)
         db.close()
     }
@@ -53,7 +52,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(
     }
 
     @SuppressLint("Recycle", "Range")
-    fun getAllQuotes(): List<QuoteInfo> {
+    fun getAllQuotes(): MutableList<QuoteInfo> {
         val quotesList = mutableListOf<QuoteInfo>()
         val selectQuery = "SELECT * FROM $TABLE_QUOTES"
         val db = this.writableDatabase
@@ -61,13 +60,11 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(
 
         if (cursor.moveToFirst()) {
             do {
-                val id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID))
                 val quoteText = cursor.getString(cursor.getColumnIndex(COLUMN_QUOTE_TEXT))
                 val quoteAuthor = cursor.getString(cursor.getColumnIndex(COLUMN_QUOTE_AUTHOR))
-                val isFavorite = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_FAVORITE)) == 1
 
                 val quote = QuoteInfo(
-                    quoteText, quoteAuthor, isFavorite
+                    quoteText, quoteAuthor
                 )
                 quotesList.add(quote)
             } while (cursor.moveToNext())
@@ -76,6 +73,18 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(
         cursor.close()
         db.close()
         return quotesList
+    }
+
+    @SuppressLint("Recycle")
+    fun isQuoteExists(quote: QuoteInfo): Boolean {
+        val selectQuery = "SELECT * FROM $TABLE_QUOTES " +
+                "WHERE $COLUMN_QUOTE_TEXT = ? AND $COLUMN_QUOTE_AUTHOR = ?"
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(selectQuery, arrayOf(quote.quoteText, quote.quoteAuthor))
+        val quoteExists = cursor.count > 0
+        cursor.close()
+        db.close()
+        return quoteExists
     }
 
 }
