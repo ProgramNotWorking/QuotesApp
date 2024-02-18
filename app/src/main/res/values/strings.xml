@@ -7,4 +7,5 @@
     <string name="upper_apostrophe" translatable="false">«</string>
     <string name="unknown_author">Unknown author</string>
     <string name="fav_list_is_empty">U have not add any quote to favorites yet</string>
+    <string name="quote_has_deleted">Quote has deleted</string>
 </resources>

@@ -5,4 +5,5 @@
     <string name="internet_connection_problems">Проблемы соединения с интернетом</string>
     <string name="unknown_author">Неизвестный автор</string>
     <string name="fav_list_is_empty">Вы пока не добавили ни одну цитату в избранное</string>
+    <string name="quote_has_deleted">Цитата удалена</string>
 </resources>

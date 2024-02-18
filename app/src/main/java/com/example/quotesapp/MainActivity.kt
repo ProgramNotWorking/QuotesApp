@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var apiClient: FormismaticApiClient
     private val database = DatabaseHelper(this)
 
-    @SuppressLint("SetTextI18n", "ShowToast", "UseCompatLoadingForDrawables")
+    @SuppressLint("SetTextI18n", "ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,8 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         apiClient = FormismaticApiClient(this@MainActivity)
         quoteViewModel = ViewModelProvider(this)[QuoteViewModel::class.java]
-
-
 
         renderElementsOnStartup()
 
@@ -60,40 +58,7 @@ class MainActivity : AppCompatActivity() {
 
             addToFavoriteButton.setOnClickListener {
 
-                // replace this with fr "add to fav" operation
-
-                addQuoteToFavorite(
-                    {
-                        database.addQuote(
-                            QuoteInfo(
-                                quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
-                            )
-                        )
-
-                        addToFavoriteButton.setImageResource(R.drawable.filled_heart_icon)
-                        quoteViewModel.setFavoriteState(true)
-
-                        database.close()
-                    }, {
-                        database.deleteQuote(
-                            QuoteInfo(
-                                quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
-                            )
-                        )
-
-                        addToFavoriteButton.setImageResource(R.drawable.unfilled_heart_icon)
-                        quoteViewModel.setFavoriteState(false)
-
-                        database.close()
-                    }, {
-                        quoteViewModel.setFavoriteState(
-                            addToFavoriteButton.drawable.constantState ==
-                                    resources.getDrawable(R.drawable.filled_heart_icon).constantState
-                        )
-
-                        addToFavoriteButton.invalidate()
-                    }
-                )
+                addToFavoriteButtonProcess()
 
             }
 
@@ -130,6 +95,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
+    private fun addToFavoriteButtonProcess() = with(binding) {
+        addQuoteToFavorite(
+            {
+                database.addQuote(
+                    QuoteInfo(
+                        quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
+                    )
+                )
+
+                addToFavoriteButton.setImageResource(R.drawable.filled_heart_icon)
+                quoteViewModel.setFavoriteState(true)
+
+                database.close()
+            }, {
+                database.deleteQuote(
+                    QuoteInfo(
+                        quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor()
+                    )
+                )
+
+                addToFavoriteButton.setImageResource(R.drawable.unfilled_heart_icon)
+                quoteViewModel.setFavoriteState(false)
+
+                database.close()
+            }, {
+                quoteViewModel.setFavoriteState(
+                    addToFavoriteButton.drawable.constantState ==
+                            resources.getDrawable(R.drawable.filled_heart_icon).constantState
+                )
+
+                addToFavoriteButton.invalidate()
+            }
+        )
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun addQuoteToFavorite(
         onFollow: () -> Unit,
         onUnfollow: () -> Unit,
@@ -146,36 +147,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchDataAndSetText() = with(binding) {
-        if (isNetworkAvailable()) {
-            quoteViewModel.getQuote(apiClient)
-            quoteViewModel.quoteTextLiveData.observe(this@MainActivity) { quote ->
-                quoteTextView.text = quote
-                quoteViewModel.setQuoteText(quote)
-            }
-            quoteViewModel.quoteAuthorLiveData.observe(this@MainActivity) { author ->
-                quoteAuthorTextView.text = author
-                quoteViewModel.setQuoteAuthor(author)
-            }
-            quoteViewModel.setFavoriteState(
-                database.isQuoteExists(
+        isNetworkAvailable(
+            {
+                quoteViewModel.getQuote(apiClient)
+                quoteViewModel.quoteTextLiveData.observe(this@MainActivity) { quote ->
+                    quoteTextView.text = quote
+                    quoteViewModel.setQuoteText(quote)
+                }
+                quoteViewModel.quoteAuthorLiveData.observe(this@MainActivity) { author ->
+                    quoteAuthorTextView.text = author
+                    quoteViewModel.setQuoteAuthor(author)
+                }
+                quoteViewModel.setFavoriteState(
+                    database.isQuoteExists(
                         QuoteInfo(quoteViewModel.getQuoteText(), quoteViewModel.getQuoteAuthor())
                     )
-            ) // Check something with that
-            addToFavoriteButton.setImageResource(
-                if (quoteViewModel.getFavoriteState())
-                    R.drawable.filled_heart_icon
-                else
+                )
+                addToFavoriteButton.setImageResource( // This is temp problem solve
                     R.drawable.unfilled_heart_icon
-            )
-            addToFavoriteButton.invalidate()
-
-            // Check on fav received quote
-
-        } else {
-            Snackbar.make(
-                mainHolder, R.string.internet_connection_problems, Snackbar.LENGTH_LONG
-            ).show()
-        }
+                )
+                addToFavoriteButton.invalidate()
+            }, {
+                Snackbar.make(
+                    mainHolder, R.string.internet_connection_problems, Snackbar.LENGTH_LONG
+                ).show()
+            }
+        )
     }
 
     private fun renderElementsOnStartup() = with(binding) {
@@ -194,11 +191,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isNetworkAvailable(): Boolean {
+    private fun isNetworkAvailable(
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo?.isConnectedOrConnecting ?: false
+        if (networkInfo?.isConnectedOrConnecting == true) onSuccess() else onError()
     }
 
 }
