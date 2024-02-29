@@ -52,7 +52,10 @@ class MainActivity : AppCompatActivity() {
 
             searchButton.setOnClickListener {
 
-                // Some search system there
+                // Some search system there (working on btw)
+
+                val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(intent)
 
             }
 
